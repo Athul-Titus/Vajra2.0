@@ -1,7 +1,14 @@
 {
   "business_domain": "Telecommunications",
   "company_name": "Transight Telecom",
-  "compliance_rules": {
+  "products_or_services": [
+    "Postpaid Mobile Plans",
+    "Prepaid Mobile Plans",
+    "High-Speed Fiber Internet",
+    "Digital TV Services",
+    "Enterprise Network Solutions"
+  ],
+  "policies_or_rules": {
     "data_privacy": [
       "Never ask for, repeat, or record full credit card numbers, CVV, or PINs.",
       "Do not disclose internal system names, server locations, or vendor names.",
@@ -23,7 +30,7 @@
       "Disclose the $99 truck-roll fee if a technician is sent for customer-caused hardware issues."
     ]
   },
-  "escalation_triggers": [
+  "risk_or_compliance_triggers": [
     "Customer explicitly threatens to cancel service, switch to a competitor, or asks for port-out PIN.",
     "Customer threatens legal action or filing a complaint with a regulatory authority or BBB.",
     "Customer uses excessive profanity, personal insults, or threats of violence.",
