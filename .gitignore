@@ -1,0 +1,53 @@
+# Environment
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# UV
+uv.lock
+
+# Audio test files (large)
+*.wav
+*.mp3
+*.ogg
+*.webm
+*.m4a
+
+# Planning docs (not part of deliverable)
+IMPLEMENTATION_PLAN.md
+DEV_CHECKLIST.md
+test.py
+test_e2e.py
+test_groq_e2e.py
+test_groq_output.json
+Transight Hackathon Problem Statement-AgenticAI.pdf

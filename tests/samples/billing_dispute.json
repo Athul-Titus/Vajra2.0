@@ -1,0 +1,15 @@
+{
+  "name": "billing_dispute",
+  "description": "Customer disputes charges and threatens to leave. Agent resolves with credit.",
+  "transcript": "Agent: Good morning, thank you for calling Jio customer support. My name is Priya. How may I help you today?\nCustomer: Hi Priya, I'm really frustrated. My broadband has been down for 3 days now and nobody has fixed it. I've called 4 times already!\nAgent: I completely understand your frustration, and I sincerely apologize for the inconvenience. Let me pull up your account right away. Could you please share your registered mobile number?\nCustomer: It's 9876543210. And my customer ID is JIO-2024-88921.\nAgent: Thank you. I can see your account, Mr. Sharma. I can see there have been multiple complaints raised. Let me check the current status of your issue.\nCustomer: This is ridiculous. I'm paying 999 rupees per month for your fiber plan and getting zero service. If this isn't fixed today, I'm going to port my number to Airtel and file a complaint with TRAI.\nAgent: I completely understand, Mr. Sharma. You have every right to be upset. I'm escalating this to our priority resolution team right now. I can see the issue is related to a fiber cut in your area. Our technician will visit within 4 hours today.\nCustomer: You said the same thing last time. Nothing happened.\nAgent: I understand your skepticism, and I take full responsibility. This time, I'm assigning a senior technician and I'll personally follow up. Let me also apply a credit of 500 rupees to your account for the downtime. Would that be acceptable?\nCustomer: Fine, but if nobody shows up today, I'm done with Jio.\nAgent: I assure you, Mr. Sharma. I'm noting your complaint reference number JC-2024-445566. The technician visit is confirmed for today between 2 PM and 6 PM. I will call you back at 6 PM to confirm resolution. Is there anything else I can help with?\nCustomer: No, that's it. Just make sure it gets fixed.\nAgent: Absolutely, Mr. Sharma. Thank you for your patience, and again I apologize for the inconvenience. Have a good day.",
+  "expected_highlights": {
+    "sentiment_overall": "negative",
+    "customer_name": "Mr. Sharma",
+    "customer_id": "JIO-2024-88921",
+    "risk_triggers": ["port my number", "Airtel", "TRAI"],
+    "products": ["fiber plan", "broadband"],
+    "amounts": ["999 rupees", "500 rupees"],
+    "risk_level": "high",
+    "call_outcome": "follow_up_required"
+  }
+}

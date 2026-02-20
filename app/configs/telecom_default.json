@@ -1,0 +1,116 @@
+{
+  "client_id": "telecom_default",
+  "client_name": "Default Telecom Provider",
+  "domain": "telecom",
+  "description": "Default configuration for Indian telecom customer service analysis. Covers TRAI regulations, standard quality criteria, and common risk scenarios.",
+  "products": [
+    "prepaid_plans",
+    "postpaid_plans",
+    "broadband_fiber",
+    "dth_television",
+    "enterprise_solutions",
+    "international_roaming",
+    "value_added_services",
+    "mobile_number_portability"
+  ],
+  "compliance_policies": [
+    {
+      "id": "TRAI-001",
+      "name": "DND Compliance",
+      "description": "Agents must not make unsolicited commercial/marketing calls to customers registered on the NCPR/DND registry. Any promotional offer must only be communicated if the customer has opted in.",
+      "severity": "high"
+    },
+    {
+      "id": "TRAI-002",
+      "name": "Explicit Consent for Changes",
+      "description": "Agent must obtain clear, explicit verbal consent from the customer before activating, deactivating, or modifying any plan, addon, or service. Silence or ambiguity does not constitute consent.",
+      "severity": "high"
+    },
+    {
+      "id": "TRAI-003",
+      "name": "Tariff Transparency",
+      "description": "Agent must clearly communicate all charges, fees, taxes, and billing cycle implications before making any plan or service change. No hidden charges allowed.",
+      "severity": "medium"
+    },
+    {
+      "id": "TRAI-004",
+      "name": "Complaint Acknowledgment",
+      "description": "When a customer files a complaint, the agent must provide a docket/complaint reference number and inform about expected resolution timeline as per TRAI guidelines.",
+      "severity": "medium"
+    },
+    {
+      "id": "TRAI-005",
+      "name": "MNP Rights Information",
+      "description": "Agent must not provide false, misleading, or discouraging information regarding Mobile Number Portability (MNP). Customer's right to port must be respected.",
+      "severity": "high"
+    },
+    {
+      "id": "TRAI-006",
+      "name": "Data Privacy",
+      "description": "Agent must not request or disclose sensitive personal information (Aadhaar, full bank details) unless absolutely necessary for identity verification, and must inform the customer why the information is needed.",
+      "severity": "high"
+    },
+    {
+      "id": "TRAI-007",
+      "name": "Call Recording Disclosure",
+      "description": "Customer must be informed that the call is being recorded for quality and training purposes.",
+      "severity": "low"
+    }
+  ],
+  "risk_triggers": [
+    "TRAI complaint",
+    "consumer forum",
+    "consumer court",
+    "legal action",
+    "lawyer",
+    "advocate",
+    "port out",
+    "port my number",
+    "cancel subscription",
+    "cancel my connection",
+    "disconnect",
+    "social media",
+    "twitter",
+    "media",
+    "newspaper",
+    "ombudsman",
+    "fraud",
+    "scam",
+    "cheat",
+    "harassment",
+    "sue",
+    "refund",
+    "compensation"
+  ],
+  "quality_criteria": {
+    "greeting_required": true,
+    "closing_required": true,
+    "empathy_keywords": [
+      "understand",
+      "sorry",
+      "apologize",
+      "appreciate",
+      "thank you",
+      "I understand your concern",
+      "I can see how that would be frustrating"
+    ],
+    "resolution_confirmation_required": true,
+    "prohibited_phrases": [
+      "calm down",
+      "that's not my problem",
+      "nothing I can do",
+      "you have to",
+      "it's your fault",
+      "I don't care",
+      "that's policy"
+    ]
+  },
+  "call_outcome_categories": [
+    "resolved",
+    "escalated",
+    "follow_up_required",
+    "transferred",
+    "dropped",
+    "customer_callback_scheduled"
+  ]
+}

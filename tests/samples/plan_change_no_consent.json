@@ -1,0 +1,11 @@
+{
+  "name": "plan_change_no_consent",
+  "description": "Agent changes customer's plan without obtaining explicit consent. TRAI consent violation.",
+  "transcript": "Agent: Good evening, thank you for calling Jio. I'm Sneha. How can I help you?\nCustomer: Hi Sneha, I wanted to know about upgrading my prepaid plan. I currently have the 299 plan.\nAgent: Sure! I can see your account. Actually, I've already upgraded you to our 599 plan which gives you much more data and benefits.\nCustomer: Wait, what? You already changed my plan? I didn't ask you to do that. I just wanted information.\nAgent: It's a much better plan, sir. You get 3 GB per day instead of 1.5 GB, and the tariff transparency is all there in the SMS I just sent you.\nCustomer: But I didn't agree to this! You can't just change my plan without asking me first. I want my old plan back.\nAgent: Sir, it's really a better value. Most customers prefer this plan. Let me explain the benefits—\nCustomer: I don't care about the benefits. You changed my plan without my permission. Change it back right now.\nAgent: Okay sir, I'll revert it. But I do recommend you consider the upgrade.\nCustomer: Just change it back. And I want to know who authorized this change without my consent.",
+  "expected_highlights": {
+    "sentiment_overall": "negative",
+    "violations_expected": ["CONSENT_NOT_OBTAINED", "TARIFF_TRANSPARENCY"],
+    "risk_level": "high",
+    "call_outcome": "resolved"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "friendly_resolution",
+  "description": "A quick, friendly call where the agent resolves a minor billing question. No violations, low risk.",
+  "transcript": "Agent: Good morning, thank you for calling Jio support. This is Rahul. How can I help you today?\nCustomer: Hi Rahul, I just had a quick question about my bill. I see a charge of 49 rupees for a value-added service, but I don't remember subscribing to anything.\nAgent: I'd be happy to help you with that. Could you please share your mobile number so I can check your account?\nCustomer: Sure, it's 9123456789.\nAgent: Thank you. Let me pull up your account... I can see the charge. It's for a caller tune service that was activated on the 15th of last month. Would you like me to deactivate it and reverse the charge?\nCustomer: Yes, please! I must have accidentally activated it.\nAgent: No problem at all. I've deactivated the caller tune service and initiated a refund of 49 rupees. It will reflect in your next billing cycle. Is there anything else I can help you with?\nCustomer: No, that's perfect. Thank you so much, Rahul. You were really helpful.\nAgent: Thank you for calling, and I'm glad I could help. Have a wonderful day!",
+  "expected_highlights": {
+    "sentiment_overall": "positive",
+    "risk_level": "none",
+    "violations_expected": [],
+    "agent_quality_high": true,
+    "call_outcome": "resolved"
+  }
+}

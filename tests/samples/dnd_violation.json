@@ -1,0 +1,14 @@
+{
+  "name": "dnd_violation",
+  "description": "Agent makes an unsolicited marketing call to a DND-registered customer. Clear compliance violation.",
+  "transcript": "Agent: Hello, am I speaking with Mrs. Kapoor?\nCustomer: Yes, who is this?\nAgent: Good afternoon, Mrs. Kapoor. I'm calling from Jio to tell you about an exciting new offer. We have a premium postpaid plan at just 1499 rupees per month with unlimited 5G data.\nCustomer: Wait, I didn't ask for any call. I'm registered on DND. How did you get my number?\nAgent: Ma'am, this is a special offer only for our valued customers. You'll get 200 GB data, unlimited calls, and free Netflix subscription.\nCustomer: I said I'm on DND! This is a marketing call and I did not consent to this. Stop calling me.\nAgent: Ma'am, just hear me out. This plan also includes international roaming at no extra cost. It's a limited time offer expiring this week.\nCustomer: Are you not listening? I'm going to file a complaint with TRAI. This is harassment. Remove my number from your list immediately.\nAgent: Okay ma'am, I apologize. Let me note your request. But before I go, can I just mention our family plan—\nCustomer: No! I'm hanging up and filing a complaint right now.",
+  "expected_highlights": {
+    "sentiment_overall": "negative",
+    "customer_name": "Mrs. Kapoor",
+    "violations_expected": ["DND_VIOLATION", "CONSENT_NOT_OBTAINED"],
+    "risk_triggers": ["TRAI", "harassment", "complaint"],
+    "risk_level": "critical",
+    "agent_quality_low": true,
+    "call_outcome": "dropped"
+  }
+}
