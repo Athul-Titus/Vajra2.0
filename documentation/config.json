@@ -1,0 +1,44 @@
+{
+  "business_domain": "Telecommunications",
+  "company_name": "Transight Telecom",
+  "products_or_services": [
+    "Postpaid Mobile Plans",
+    "Prepaid Mobile Plans",
+    "High-Speed Fiber Internet",
+    "Digital TV Services",
+    "Enterprise Network Solutions"
+  ],
+  "policies_or_rules": {
+    "data_privacy": [
+      "Never ask for, repeat, or record full credit card numbers, CVV, or PINs.",
+      "Do not disclose internal system names, server locations, or vendor names.",
+      "Do not confirm or discuss unreleased products, networks, or promotional pricing.",
+      "Do not disclose internal metrics like queue numbers or wait times."
+    ],
+    "authentication": [
+      "Verify caller identity using two of: Account PIN, Last 4 of SSN, DOB, or Billing Address before discussing account details.",
+      "Refuse account modifications if the caller is not the primary account holder or listed Authorized User."
+    ],
+    "financial_and_billing": [
+      "Limit courtesy credits to a maximum of $50.00.",
+      "Explicitly state the duration of any promotional plan and that standard rates apply afterward.",
+      "Waive late fees only if it is the first in 12 months or due to a documented company error."
+    ],
+    "technical_support": [
+      "Never guarantee specific internet speeds; always use the phrase 'speeds up to X Mbps'.",
+      "Inform customers immediately of any known regional outages.",
+      "Disclose the $99 truck-roll fee if a technician is sent for customer-caused hardware issues."
+    ]
+  },
+  "risk_or_compliance_triggers": [
+    "Customer explicitly threatens to cancel service, switch to a competitor, or asks for port-out PIN.",
+    "Customer threatens legal action or filing a complaint with a regulatory authority or BBB.",
+    "Customer uses excessive profanity, personal insults, or threats of violence.",
+    "Customer mentions this is their third or more time calling about the same unresolved issue."
+  ],
+  "agent_scripting_mandates": [
+    "Open call with agent name, 'Transight Telecom', and state the call is being recorded.",
+    "Ask permission before placing a customer on hold and check back every 2 minutes.",
+    "Close call by asking: 'Is there anything else I can help you with today?'"
+  ]
+}
