@@ -15,7 +15,8 @@ from contextlib import asynccontextmanager
 import structlog
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.v1.router import api_v1_router
 from app.core.config import settings
@@ -172,13 +173,24 @@ def create_app() -> FastAPI:
     # --- Routes ---
     app.include_router(api_v1_router)
 
+    # Mount static files for the frontend portal
+    import os
+    static_path = os.path.join(os.path.dirname(__file__), "static")
+    if not os.path.exists(static_path):
+        os.makedirs(static_path)
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
+
     @app.get("/", include_in_schema=False)
     async def root():
+        index_file = os.path.join(static_path, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
         return {
             "name": settings.APP_NAME,
             "version": settings.APP_VERSION,
             "docs": "/docs",
             "health": "/api/v1/health",
+            "message": "Vajra 2.0 Backend is running. Please add app/static/index.html to see the portal."
         }
 
     return app
