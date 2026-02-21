@@ -118,6 +118,14 @@ Return a JSON object with this EXACT structure:
   }}
 }}
 
+## RISK SCORING MATRIX
+Calculate the `risk_assessment.score` (0-10 on scale, multiply the 0-100 matrix by 0.1) using this exact weighted logic:
+- Legal Threat: 40 points (Lawsuits, lawyers, regulators)
+- Churn Risk: 30 points (Mentions cancel or competitor)
+- Toxicity: Up to 15 points (Severe abuse, frustration)
+- Resolution Failure: 15 points (Unresolved or demands supervisor)
+Assign `level` based on sum: 0-25: low, 26-50: medium, 51-75: high, 76-100: critical.
+
 ## IMPORTANT NOTES
 
 - `compliance_violations` MUST be an empty list `[]` if no violations found.

@@ -151,13 +151,16 @@ async def analyze_audio_conversation(
         )
 
     try:
-        return await analyze_audio(
+        from app.services.pipeline import run_pipeline_from_audio
+        
+        result = await run_pipeline_from_audio(
             audio_bytes=audio_bytes,
             audio_mime_type=content_type,
             filename=file.filename or "unknown",
             config_id=config_id,
             db_session=db,
         )
+        return result["analysis"]
     except ConfigurationNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

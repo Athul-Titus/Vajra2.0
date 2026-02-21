@@ -26,7 +26,7 @@ class AppSettings(BaseSettings):
 
     # --- Gemini AI (fallback) ---
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-2.0-flash"
+    GEMINI_MODEL: str = "gemini-2.5-flash"
 
     # --- Groq AI (primary — parallel dual-model) ---
     GROQ_API_KEY: str = ""

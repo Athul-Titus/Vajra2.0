@@ -1,0 +1,175 @@
+{
+  "success": true,
+  "metadata": {
+    "request_id": "71b15d82-3fe1-4cf6-a747-78894ddc9ffa",
+    "timestamp": "2026-02-21T02:07:34.171048",
+    "processing_time_ms": 16533,
+    "ai_model": "gemini-2.5-flash",
+    "ai_provider": "gemini",
+    "input_type": "text",
+    "config_id": "telecom_default",
+    "audio_duration_seconds": null
+  },
+  "analysis": {
+    "summary": "The customer initiated the call expressing extreme frustration over recurring slow internet speeds, impacting online meetings. The agent apologized multiple times, acknowledged the issue, and promised to prioritize the complaint with an update within 24 hours, but did not provide a complaint reference number. The customer threatened to switch service providers if the issue persists.",
+    "languages_detected": [
+      "English"
+    ],
+    "sentiment": {
+      "overall": "mixed",
+      "overall_confidence": 0.88,
+      "customer": {
+        "label": "frustrated",
+        "confidence": 0.95
+      },
+      "agent": {
+        "label": "empathetic",
+        "confidence": 0.9
+      }
+    },
+    "customer_intents": [
+      "internet_issue",
+      "complaint",
+      "threat_of_churn"
+    ],
+    "topics": [
+      "internet_speed",
+      "network_issue",
+      "customer_retention"
+    ],
+    "entities": {
+      "customer_name": null,
+      "customer_id": null,
+      "phone_numbers": [],
+      "products_mentioned": [
+        "internet"
+      ],
+      "competitors_mentioned": [
+        "another service provider"
+      ],
+      "amounts_mentioned": [],
+      "custom_entities": {}
+    },
+    "compliance_violations": [
+      {
+        "violation_id": "CV-001",
+        "type": "TRAI-004",
+        "severity": "medium",
+        "confidence": 0.9,
+        "description": "The agent acknowledged the customer's complaint and provided an expected resolution timeline but failed to provide a docket/complaint reference number as required by TRAI guidelines.",
+        "evidence": "We will prioritize your complaint and update you within 24 hours.",
+        "policy_reference": "TRAI-004 \u2014 Complaint Acknowledgment: When a customer files a complaint, the agent must provide a docket/complaint reference number and inform about expected resolution timeline as per TRAI guidelines.",
+        "recommended_action": "Agents must be trained to provide a complaint reference number for every registered complaint."
+      },
+      {
+        "violation_id": "CV-002",
+        "type": "TRAI-007",
+        "severity": "low",
+        "confidence": 0.9,
+        "description": "The agent did not inform the customer that the call was being recorded for quality and training purposes.",
+        "evidence": "No statement regarding call recording was made by the agent.",
+        "policy_reference": "TRAI-007 \u2014 Call Recording Disclosure: Customer must be informed that the call is being recorded for quality and training purposes.",
+        "recommended_action": "Agents should be reminded to include the call recording disclosure at the beginning of every call."
+      }
+    ],
+    "agent_quality": {
+      "overall_score": 7.0,
+      "confidence": 0.85,
+      "greeting": {
+        "score": 8.0,
+        "present": true,
+        "evidence": "I am very sorry for the inconvenience. Could you please provide your registered mobile number?"
+      },
+      "empathy": {
+        "score": 9.0,
+        "present": true,
+        "evidence": "I am very sorry for the inconvenience. ... I understand your concern. ... I apologize again."
+      },
+      "professionalism": {
+        "score": 8.5,
+        "present": true,
+        "evidence": "I am very sorry for the inconvenience. Could you please provide your registered mobile number? ... I understand your concern. Let me check the issue in your area right away. ... I apologize again. We will prioritize your complaint and update you within 24 hours."
+      },
+      "resolution_skills": {
+        "score": 6.0,
+        "present": true,
+        "evidence": "Let me check the issue in your area right away. ... We will prioritize your complaint and update you within 24 hours."
+      },
+      "closing": {
+        "score": 0.0,
+        "present": false,
+        "evidence": "The conversation transcript ends without an explicit closing statement from the agent."
+      },
+      "strengths": [
+        "Maintained a professional and empathetic tone",
+        "Acknowledged customer's frustration and apologized",
+        "Committed to follow-up action"
+      ],
+      "improvements": [
+        "Provide a complaint reference number",
+        "Ensure a clear call closing",
+        "Attempt to offer immediate troubleshooting or a more concrete resolution path"
+      ]
+    },
+    "call_outcome": {
+      "classification": "follow_up_required",
+      "confidence": 0.9,
+      "reason": "The agent promised an update within 24 hours, indicating the issue was not resolved during the call and requires further action."
+    },
+    "risk_assessment": {
+      "score": 7.0,
+      "confidence": 0.9,
+      "level": "high",
+      "factors": [
+        "Customer expressed high frustration due to recurring issue",
+        "Customer explicitly threatened to switch service providers"
+      ],
+      "triggers_detected": [
+        "switch to another service provider"
+      ],
+      "recommended_actions": [
+        "Proactive follow-up to ensure timely resolution and customer satisfaction.",
+        "Consider a retention offer or a goodwill gesture to prevent churn.",
+        "Investigate the root cause of the recurring internet speed issue for this customer."
+      ]
+    },
+    "speaker_timeline": [
+      {
+        "turn_number": 1,
+        "speaker": "customer",
+        "sentiment": "frustrated",
+        "key_point": "Expresses extreme frustration over slow internet for three days, impacting online meetings."
+      },
+      {
+        "turn_number": 2,
+        "speaker": "agent",
+        "sentiment": "empathetic",
+        "key_point": "Apologizes for inconvenience and requests registered mobile number."
+      },
+      {
+        "turn_number": 3,
+        "speaker": "customer",
+        "sentiment": "frustrated",
+        "key_point": "Reiterates frustration, mentions sharing number twice, and highlights recurring nature of the problem."
+      },
+      {
+        "turn_number": 4,
+        "speaker": "agent",
+        "sentiment": "empathetic",
+        "key_point": "Acknowledges concern and offers to check the issue in the customer's area."
+      },
+      {
+        "turn_number": 5,
+        "speaker": "customer",
+        "sentiment": "anxious",
+        "key_point": "Demands quick resolution and threatens to switch to another service provider if the issue persists."
+      },
+      {
+        "turn_number": 6,
+        "speaker": "agent",
+        "sentiment": "professional",
+        "key_point": "Apologizes again, promises to prioritize the complaint, and update within 24 hours."
+      }
+    ]
+  }
+}
