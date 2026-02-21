@@ -43,6 +43,17 @@ Audio File (OGG / MP4 / WAV / MP3)
 
 ---
 
+## 🧠 AI Usage Approach
+
+Our approach leverages specific models for the tasks they perform best, optimizing for both speed and reasoning quality:
+
+- **Google Gemini**: Handles diarized audio transcription, providing highly accurate speaker separation (e.g., distinguishing between Customer and Agent).
+- **Groq (Llama-3.1-8b-instant)**: Utilized for rapid extraction tasks such as generating summaries, analyzing sentiment, identifying entities, and extracting topics.
+- **Groq (Llama-3.3-70b-versatile)**: Responsible for complex reasoning, including agent quality scoring, nuanced risk assessment, and determining the call outcome.
+- **RAG (Retrieval-Augmented Generation)**: Uses FAISS and sentence transformers to embed client policies, grounding compliance violation checks in actual documentation rather than relying on LLM memory.
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -315,6 +326,22 @@ documentation/
 | **`config.json` is source of truth** | Compliance policies and risk triggers are read from `documentation/config.json` at startup. A server restart is needed after editing it. |
 | **First-request RAG warmup** | The FAISS index and sentence-transformer model load on the first request (~30s). All subsequent requests use the cached index and run in ~12s total. |
 | **SQLite for demo only** | The database is SQLite for simplicity. For production, replace `DATABASE_URL` with a PostgreSQL connection string. |
+
+---
+
+## ⚠️ Limitations
+
+- **Real-time Processing**: The current system relies on full file uploads and does not support real-time audio stream processing.
+- **Audio Quality Dependency**: Extremely noisy environments or complex multi-speaker (3+) panels may reduce the accuracy of the model's diarization.
+- **External Dependencies**: The system speed and availability are directly reliant on the rate limits and uptimes of the external APIs.
+
+---
+
+## 🔮 Future Improvements
+
+- **Real-Time API Integration**: Transition to processing live call audio streams via real-time APIs, providing immediate feedback during a call.
+- **Data Analytics and Charting**: Implement data sorting, aggregations, and visual charts to track agent performance, risk trends, and customer sentiment over time.
+- **AI Agent Training Loop**: Utilize the structured call outcomes, charts, and scored data as a robust dataset to securely train AI agents and fine-tune models.
 
 ---
 
