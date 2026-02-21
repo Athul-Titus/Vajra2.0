@@ -306,3 +306,48 @@ class ErrorResponse(BaseModel):
 
     success: bool = Field(False)
     error: ErrorDetail = Field(..., description="Error information")
+
+
+# ---------------------------------------------------------------------------
+# Unified audio → transcription + analysis response
+# ---------------------------------------------------------------------------
+
+
+class TranscriptionSegment(BaseModel):
+    """A single diarized speaker segment."""
+
+    speaker: str = Field(..., description="Normalised speaker ID e.g. SPEAKER_01")
+    speaker_label: str = Field(..., description="Raw label e.g. 'User 1'")
+    text: str = Field(..., description="Spoken words in this segment")
+
+
+class TranscriptionResult(BaseModel):
+    """Output of the transcription step in the unified pipeline."""
+
+    transcript: str = Field(..., description="Full merged transcript with speaker labels")
+    language_hint: str | None = Field(None, description="Language hint supplied by caller")
+    task: str = Field(..., description="'transcribe' or 'translate'")
+    segments: list[TranscriptionSegment] = Field(
+        default_factory=list, description="Per-segment speaker breakdown"
+    )
+    speakers: list[str] = Field(
+        default_factory=list, description="Unique speaker IDs detected"
+    )
+    transcription_time_ms: int = Field(..., description="Time spent on transcription step")
+
+
+class AudioFullAnalysisResponse(BaseModel):
+    """Unified response: audio → transcription + full conversation analysis.
+
+    One upload → diarized transcript + compliance/quality/sentiment/risk.
+    """
+
+    success: bool = Field(True)
+    metadata: ResponseMetadata = Field(..., description="Request metadata and timing")
+    transcription: TranscriptionResult = Field(
+        ..., description="Diarized transcript with speaker segments"
+    )
+    analysis: ConversationAnalysis = Field(
+        ..., description="Full AI analysis based on the transcript"
+    )
+

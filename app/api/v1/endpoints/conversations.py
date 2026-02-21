@@ -18,10 +18,11 @@ from app.core.security import verify_api_key
 from app.models.database import get_db_session
 from app.models.schemas.requests import TextAnalysisRequest
 from app.models.schemas.responses import (
+    AudioFullAnalysisResponse,
     ConversationAnalysisResponse,
     ErrorResponse,
 )
-from app.services.conversation_analyzer import analyze_audio, analyze_text
+from app.services.conversation_analyzer import analyze_audio, analyze_audio_full, analyze_text
 
 router = APIRouter(
     prefix="/conversations",
@@ -177,3 +178,79 @@ async def analyze_audio_conversation(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"AI analysis failed: {exc}",
         )
+
+
+@router.post(
+    "/analyze/audio/full",
+    response_model=AudioFullAnalysisResponse,
+    summary="🎤 Audio → Transcript → Full Analysis (unified pipeline)",
+    description=(
+        "**The main demo endpoint.** Upload a call recording and get back:\n\n"
+        "- ✅ Diarized transcript with per-speaker segments\n"
+        "- ✅ Compliance violations (TRAI DND, consent, etc.)\n"
+        "- ✅ Agent quality score (greeting, empathy, resolution)\n"
+        "- ✅ Sentiment analysis (customer + agent)\n"
+        "- ✅ Risk assessment (escalation level + factors)\n"
+        "- ✅ Speaker timeline turn-by-turn\n\n"
+        "Supports Malayalam, Hindi, English. Set `task=translate` to convert to English."
+    ),
+    responses={
+        400: {"model": ErrorResponse, "description": "Invalid input"},
+        413: {"model": ErrorResponse, "description": "File too large"},
+        415: {"model": ErrorResponse, "description": "Unsupported audio type"},
+        500: {"model": ErrorResponse, "description": "AI engine error"},
+    },
+)
+async def analyze_audio_full_endpoint(
+    file: UploadFile = File(..., description="Audio file (wav/mp3/ogg/webm/m4a/mpeg)"),
+    config_id: str = Form(
+        "telecom_default",
+        description="Client config ID (drives compliance rules)",
+    ),
+    task: str = Form(
+        "transcribe",
+        description="'transcribe' keeps original language. 'translate' → English.",
+    ),
+    language: str | None = Form(
+        None,
+        description="Language hint e.g. 'Malayalam'. Auto-detected if omitted.",
+    ),
+    db=Depends(get_db_session),
+):
+    """Full pipeline: upload audio → get transcript + analysis."""
+    content_type = file.content_type or "application/octet-stream"
+    if content_type not in settings.ALLOWED_AUDIO_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported audio type: '{content_type}'. Allowed: {', '.join(settings.ALLOWED_AUDIO_TYPES)}",
+        )
+
+    try:
+        audio_bytes = await file.read()
+    except Exception as exc:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, f"Failed to read file: {exc}")
+
+    if len(audio_bytes) > settings.max_audio_size_bytes:
+        raise HTTPException(
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            f"File exceeds {settings.MAX_AUDIO_SIZE_MB} MB limit",
+        )
+
+    try:
+        return await analyze_audio_full(
+            audio_bytes=audio_bytes,
+            audio_mime_type=content_type,
+            filename=file.filename or "unknown",
+            task=task,
+            language=language,
+            config_id=config_id,
+            db_session=db,
+        )
+    except ConfigurationNotFoundError as exc:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(exc))
+    except FileTooLargeError as exc:
+        raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, str(exc))
+    except UnsupportedFileTypeError as exc:
+        raise HTTPException(status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, str(exc))
+    except AIEngineError as exc:
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, f"AI analysis failed: {exc}")

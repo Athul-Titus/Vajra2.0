@@ -136,14 +136,14 @@ def build_judgment_prompt(
     config: ClientConfiguration,
     transcript: str,
 ) -> str:
-    """Build the judgment prompt (compliance, quality, risk, outcome).
+    """Build the judgment prompt (quality, risk, outcome).
 
-    Designed for LLaMA 3.3 70B — deep reasoning and policy matching.
+    Designed for LLaMA 3.3 70B — deep reasoning and nuanced scoring.
+    NOTE: Compliance detection removed — handled by RAG pipeline in parallel.
     """
     return JUDGMENT_PROMPT_TEMPLATE.format(
         domain=config.domain,
         client_name=config.client_name,
-        compliance_policies_block=_format_compliance_policies(config),
         risk_triggers_block=_format_risk_triggers(config),
         quality_criteria_block=_format_quality_criteria(config),
         call_outcome_categories=", ".join(config.call_outcome_categories),

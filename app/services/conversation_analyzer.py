@@ -46,9 +46,12 @@ from app.core.exceptions import (
 )
 from app.models.schemas.configuration import ClientConfiguration
 from app.models.schemas.responses import (
+    AudioFullAnalysisResponse,
     ConversationAnalysis,
     ConversationAnalysisResponse,
     ResponseMetadata,
+    TranscriptionResult,
+    TranscriptionSegment,
 )
 from app.services.ai_engine import generate_analysis, generate_analysis_with_audio
 from app.services.groq_engine import generate_groq_analysis, is_groq_available
@@ -252,7 +255,6 @@ def _merge_results(extraction: dict, judgment: dict) -> dict:
             merged[key] = extraction[key]
 
     for key in [
-        "compliance_violations",
         "agent_quality",
         "call_outcome",
         "risk_assessment",
@@ -348,18 +350,34 @@ async def analyze_text(
 
     if is_groq_available():
         try:
-            extraction, judgment, timing = await _run_groq_parallel(config, transcript)
-            raw_result = _merge_results(extraction, judgment)
+            from app.services.rag_policy import detect_compliance_violations
+
+            # Run Groq parallel + RAG compliance all concurrently
+            # gather returns [groq_result, rag_result] — 2 items
+            groq_result, rag_result = await asyncio.gather(
+                _run_groq_parallel(config, transcript),
+                detect_compliance_violations(transcript),
+            )
+            # groq_result is a 3-tuple: (extraction_dict, judgment_dict, timing_dict)
+            extraction_result, judgment_result, timing = groq_result
+            raw_result = _merge_results(extraction_result, judgment_result)
+            # Inject RAG violations (replace any LLM-generated ones)
+            raw_result["compliance_violations"] = rag_result.get(
+                "compliance_violations", []
+            )
             ai_model_used = (
                 f"{settings.GROQ_EXTRACTION_MODEL} + {settings.GROQ_JUDGMENT_MODEL}"
             )
             provider_used = "groq"
 
             logger.info(
-                "groq_parallel_success",
+                "groq_rag_parallel_success",
                 request_id=request_id,
                 parallel_ms=timing["parallel_elapsed_ms"],
+                rag_violations=len(raw_result["compliance_violations"]),
+                rag_policies_retrieved=rag_result.get("retrieved_policies", []),
             )
+
 
         except Exception as groq_exc:
             logger.warning(
@@ -529,3 +547,111 @@ async def analyze_audio(
     )
 
     return response
+
+
+# ---------------------------------------------------------------------------
+# Unified audio → transcription + analysis  (the main demo pipeline)
+# ---------------------------------------------------------------------------
+
+
+async def analyze_audio_full(
+    audio_bytes: bytes,
+    audio_mime_type: str,
+    filename: str,
+    task: str = "transcribe",
+    language: str | None = None,
+    config_id: str = "telecom_default",
+    db_session=None,
+) -> AudioFullAnalysisResponse:
+    """Transcribe + analyse an audio call in one request.
+
+    Pipeline:
+      1. Gemini diarized transcription → 'User 1: ... / User 2: ...'
+      2. analyze_text() → Groq parallel 8B+70B (or Gemini fallback)
+      3. Return unified AudioFullAnalysisResponse
+    """
+    from app.services.transcription_service import transcribe_with_diarization
+
+    request_id = str(uuid.uuid4())
+    start_time = time.perf_counter()
+
+    logger.info(
+        "audio_full_analysis_start",
+        request_id=request_id,
+        config_id=config_id,
+        filename=filename,
+        task=task,
+        language=language,
+        audio_size_kb=len(audio_bytes) // 1024,
+    )
+
+    if len(audio_bytes) > settings.max_audio_size_bytes:
+        raise FileTooLargeError(settings.MAX_AUDIO_SIZE_MB)
+    if audio_mime_type not in settings.ALLOWED_AUDIO_TYPES:
+        raise UnsupportedFileTypeError(audio_mime_type, settings.ALLOWED_AUDIO_TYPES)
+
+    # Step 1 — diarized transcription
+    transcription_raw = await transcribe_with_diarization(
+        audio_bytes=audio_bytes,
+        mime_type=audio_mime_type,
+        language=language,
+        task=task,
+    )
+    transcript_text = transcription_raw["transcript"]
+    transcription_ms = transcription_raw["processing_time_ms"]
+
+    logger.info(
+        "audio_full_transcription_done",
+        request_id=request_id,
+        chars=len(transcript_text),
+        speakers=transcription_raw.get("speakers", []),
+        transcription_ms=transcription_ms,
+    )
+
+    # Step 2 — full analysis on the transcript
+    analysis_response = await analyze_text(
+        transcript=transcript_text,
+        config_id=config_id,
+        db_session=db_session,
+    )
+
+    total_ms = int((time.perf_counter() - start_time) * 1000)
+
+    segments = [
+        TranscriptionSegment(**seg) for seg in transcription_raw.get("segments", [])
+    ]
+    transcription_result = TranscriptionResult(
+        transcript=transcript_text,
+        language_hint=transcription_raw.get("language_hint"),
+        task=task,
+        segments=segments,
+        speakers=transcription_raw.get("speakers", []),
+        transcription_time_ms=transcription_ms,
+    )
+
+    metadata = ResponseMetadata(
+        request_id=request_id,
+        processing_time_ms=total_ms,
+        ai_model=analysis_response.metadata.ai_model,
+        ai_provider=analysis_response.metadata.ai_provider,
+        input_type="audio_full",
+        config_id=config_id,
+    )
+
+    logger.info(
+        "audio_full_analysis_complete",
+        request_id=request_id,
+        total_ms=total_ms,
+        transcription_ms=transcription_ms,
+        analysis_ms=analysis_response.metadata.processing_time_ms,
+        violations_found=len(analysis_response.analysis.compliance_violations),
+        risk_level=analysis_response.analysis.risk_assessment.level,
+        agent_score=analysis_response.analysis.agent_quality.overall_score,
+    )
+
+    return AudioFullAnalysisResponse(
+        success=True,
+        metadata=metadata,
+        transcription=transcription_result,
+        analysis=analysis_response.analysis,
+    )
